@@ -1,3 +1,5 @@
+import 'package:coach_app/core/helper/constant.dart';
+import 'package:coach_app/core/helper/responsive.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -15,7 +17,10 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Responsive.init(context);
+
     return Scaffold(
+      backgroundColor: backgroundColor,
       body: Stack(
         children: [
           Image.asset(
@@ -77,7 +82,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 }
 
-// كلاس واحد موحد لقص الأقواس المنحنية في كل الشاشة
+// Custom clipper for curved corner arcs
 class CornerCurveClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {

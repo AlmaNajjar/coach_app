@@ -1,7 +1,10 @@
+import 'package:coach_app/core/di/dependency_injection.dart';
 import 'package:coach_app/features/splash/presentation/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await setupGetIt();
   runApp(const CoachApp());
 }
 
