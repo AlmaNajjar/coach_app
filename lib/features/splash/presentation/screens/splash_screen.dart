@@ -1,5 +1,8 @@
 import 'package:coach_app/core/helper/constant.dart';
+import 'package:coach_app/core/helper/local_storage.dart';
 import 'package:coach_app/core/helper/responsive.dart';
+import 'package:coach_app/features/auth/presentation/screens/log_in_screen.dart';
+import 'package:coach_app/features/dashboard/presentation/screens/coach_home_screen.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -13,6 +16,20 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    _openInitialScreen();
+  }
+
+  Future<void> _openInitialScreen() async {
+    await Future<void>.delayed(const Duration(milliseconds: 1200));
+    final token = await LocalStorage.getData('token');
+    if (!mounted) return;
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute<void>(
+        builder: (_) => token == null || token.isEmpty
+            ? const LogInScreen()
+            : const CoachHomeScreen(),
+      ),
+    );
   }
 
   @override
@@ -24,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Stack(
         children: [
           Image.asset(
-            "assets/image/splash_bg.jpg",
+            "assets/image/splash.jpg",
             width: double.infinity,
             height: double.infinity,
             fit: BoxFit.cover,

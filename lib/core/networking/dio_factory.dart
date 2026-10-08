@@ -7,107 +7,86 @@ import 'package:flutter/material.dart';
 import 'api_constants.dart';
 
 class DioFactory {
-  // Private constructor to prevent instantiation
   DioFactory._();
 
   static Dio? _dio;
 
-  /// Returns a configured Dio instance (Singleton)
   static Dio getDio() {
-    Duration timeOut = const Duration(seconds: 45);
-
+    const timeOut = Duration(seconds: 45);
     if (_dio == null) {
-      _dio = Dio();
-      _dio!
+      _dio = Dio()
         ..options.baseUrl = ApiConstants.baseUrl
         ..options.connectTimeout = timeOut
         ..options.receiveTimeout = timeOut
-        ..options.sendTimeout = timeOut;
+        ..options.sendTimeout = timeOut
+        ..options.headers = {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        };
 
-      _addDioHeaders();
       _addDioInterceptors();
     }
     return _dio!;
   }
 
-  /// Configures default headers for requests
-  static void _addDioHeaders() {
-    _dio!.options.headers = {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    };
-  }
-
-  /// Configures interceptors: Authorization & Logging
   static void _addDioInterceptors() {
     _dio!.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          // Retrieve token from shared preferences / local storage dynamically
-          final token = await LocalStorage.getData('token');
-          if (token != null && token.isNotEmpty) {
-            options.headers['Authorization'] = 'Bearer $token';
-          }
-          return handler.next(options);
-        },
-        onError: (DioException e, handler) async {
-          if (e.response?.statusCode == 401) {
+          if (options.path != ApiConstants.login) {
             final token = await LocalStorage.getData('token');
             if (token != null && token.isNotEmpty) {
-              // 1. إعادة ضبط الجلسة أولاً وقراءة اسم المستخدم المحفوظ
+              final tokenType =
+                  await LocalStorage.getData('token_type') ?? 'Bearer';
+              options.headers['Authorization'] = '$tokenType $token';
+            }
+          }
+          handler.next(options);
+        },
+        onError: (error, handler) async {
+          if (error.response?.statusCode == 401 &&
+              error.requestOptions.path != ApiConstants.login) {
+            final token = await LocalStorage.getData('token');
+            if (token != null && token.isNotEmpty) {
               await AppSessionManager.resetFromGlobalContext();
-              final savedUsername = await LocalStorage.getData(
-                'Saved_username',
-              );
-
-              // 2. التوجيه لشاشة تسجيل الدخول وتمرير اسم المستخدم
-              final context = getIt<GlobalKey<NavigatorState>>().currentContext;
+              final context =
+                  getIt<GlobalKey<NavigatorState>>().currentContext;
               if (context != null && context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text(
-                      'انتهت صلاحية الجلسة أو تم تسجيل الدخول من حساب آخر. يرجى تسجيل الدخول مجدداً.',
+                      'Your session expired. Please sign in again.',
                     ),
                     backgroundColor: Colors.red,
                   ),
                 );
-                // سيتم تفعيل التوجيه لشاشة تسجيل الدخول بمجرد إنشائها
-                // Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
               }
             }
           }
-          return handler.next(e);
-        },
-        onResponse: (response, handler) {
-          return handler.next(response);
+          handler.next(error);
         },
       ),
     );
 
-    // Add logging interceptor in debug mode only
     if (kDebugMode) {
       _dio!.interceptors.add(
         LogInterceptor(
           request: true,
-          requestHeader: true,
-          requestBody: true,
-          responseHeader: true,
-          responseBody: true,
-          error: true,
-          logPrint: (object) {
-            debugPrint(object.toString());
-          },
+          requestHeader: false,
+          requestBody: false,
+          responseHeader: false,
+          responseBody: false,
+          error: false,
+          logPrint: (object) => debugPrint(object.toString()),
         ),
       );
     }
   }
 
-  /// Helper method to manually set/refresh token header (e.g. immediately after login)
-  static void setTokenIntoHeader(String token) {
-    _dio?.options.headers['Authorization'] = 'Bearer $token';
+  static void setTokenIntoHeader(String token, {String tokenType = 'Bearer'}) {
+    _dio?.options.headers['Authorization'] = '$tokenType $token';
   }
 
-  /// Helper method to manually clear token header (e.g. on logout)
   static void clearTokenFromHeader() {
     _dio?.options.headers.remove('Authorization');
   }
