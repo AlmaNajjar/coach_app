@@ -1,5 +1,5 @@
 class ApiConstants {
-  static const String baseUrl = "https://technogym.iss-group.me/api/";
+  static const String baseUrl = "https://technogymtest.iss-group.me/api/";
   //"https://technogym.iss-group.me/api/"
   // API Endpoints
   static const String login = "v1/auth/login";
