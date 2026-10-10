@@ -2,7 +2,7 @@ import 'package:coach_app/core/di/dependency_injection.dart';
 import 'package:coach_app/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:coach_app/features/auth/presentation/cubit/auth_state.dart';
 import 'package:coach_app/features/auth/presentation/widgets/custom_text_field.dart';
-import 'package:coach_app/features/dashboard/presentation/screens/coach_home_screen.dart';
+import 'package:coach_app/features/home/presentation/screen/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -91,9 +91,7 @@ class _LogInViewState extends State<_LogInView> {
             listener: (context, state) {
               if (state.status == AuthStatus.success) {
                 Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute<void>(
-                    builder: (_) => const CoachHomeScreen(),
-                  ),
+                  MaterialPageRoute<void>(builder: (_) => HomeScreen()),
                   (_) => false,
                 );
               }
