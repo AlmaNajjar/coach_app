@@ -20,6 +20,8 @@ class CoachProfile {
     this.privateCommissionRate,
     this.experienceYears,
     this.branches = const [],
+    this.totalSubscribers,
+    this.activeSubscribers,
   });
 
   final int? id;
@@ -28,6 +30,9 @@ class CoachProfile {
   final String? lastName;
   final String? gender;
   final int? age;
+  final int? totalSubscribers;
+  final int? activeSubscribers;
+
   final DateTime? dateOfBirth;
   final String? address;
   final String? photoUrl;
