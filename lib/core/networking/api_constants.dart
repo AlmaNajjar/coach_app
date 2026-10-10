@@ -1,5 +1,5 @@
 class ApiConstants {
-  static const String baseUrl = "https://technogym.iss-group.me/api/";
+  static const String baseUrl = "https://technogymtest.iss-group.me/api/";
   //"https://technogym.iss-group.me/api/"
   // API Endpoints
   static const String login = "v1/auth/login";
@@ -11,6 +11,8 @@ class ApiConstants {
   static const String dashboard = "v1/member/dashboard";
   static const String myInvoices = "v1/my-invoices";
   static const String coaches = "v1/coaches";
+  static const String coachPrivateSubscriptions =
+      "v1/coaches/private-subscriptions";
   static const String activityTypes = "v1/activity-types";
   static const String packages = "v1/subscription-plans";
   static String coachShifts(int coachId) => "v1/coaches/$coachId/shifts";
@@ -49,4 +51,5 @@ class ApiConstants {
 
   // Branch Contact Info Endpoint
   static const String branchContactInfo = "v1/branches/contact-info";
+
 }
