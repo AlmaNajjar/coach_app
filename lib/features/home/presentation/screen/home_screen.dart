@@ -38,19 +38,6 @@ class HomeScreen extends StatelessWidget {
                     SizedBox(height: 16),
                   ],
                 ),
-          SafeArea(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CoachHomeHeader(),
-                  SizedBox(height: 16.h),
-                  CoachProfileCard(),
-                  SizedBox(height: 16),
-                  CoachStatsSection(),
-                  SizedBox(height: 16.h),
-                ],
               ),
             ),
           ],
