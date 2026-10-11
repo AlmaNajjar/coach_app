@@ -12,7 +12,7 @@ void main() async {
 
 class CoachApp extends StatelessWidget {
   const CoachApp({super.key});
-
+  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
