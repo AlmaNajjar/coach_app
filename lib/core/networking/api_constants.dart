@@ -13,6 +13,8 @@ class ApiConstants {
   static const String coaches = "v1/coaches";
   static const String coachPrivateSubscriptions =
       "v1/coaches/private-subscriptions";
+  static const String playerSubscriptions = "v1/player-subscriptions";
+
   static const String activityTypes = "v1/activity-types";
   static const String packages = "v1/subscription-plans";
   static String coachShifts(int coachId) => "v1/coaches/$coachId/shifts";
@@ -51,5 +53,4 @@ class ApiConstants {
 
   // Branch Contact Info Endpoint
   static const String branchContactInfo = "v1/branches/contact-info";
-
 }
