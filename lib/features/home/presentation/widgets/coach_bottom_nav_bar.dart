@@ -118,7 +118,7 @@ class CoachBottomNavBar extends StatelessWidget {
                           selected: i == currentIndex,
                           iconAreaHeight: bubbleSize,
                           topGap: 6.h,          // نفس قيمة top فوق
-                          labelBottom: 8.h,
+                          labelBottom: 4.h,
                           onTap: () {
                             if (i == currentIndex) return;
                             HapticFeedback.selectionClick();
