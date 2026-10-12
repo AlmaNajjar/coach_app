@@ -25,36 +25,12 @@ class CoachHomeHeader extends StatelessWidget {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _buildNotificationButton(),
-                Container(
-                  width: 50.w,
-                  height: 50.w,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: black.withOpacity(0.08),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                    image: DecorationImage(
-                      image:
-                          (profile?.photoUrl != null &&
-                              profile!.photoUrl!.isNotEmpty)
-                          ? NetworkImage(profile.photoUrl!) as ImageProvider
-                          : const AssetImage("assets/image/splash.jpg"),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              ],
+              children: [_buildNotificationButton()],
             ),
             SizedBox(height: 12.h),
 
             Text(
-              'Good Morning,',
+              'Hello Coach,',
               style: TextStyle(
                 fontSize: 16.s,
                 fontWeight: FontWeight.w400,
@@ -73,7 +49,11 @@ class CoachHomeHeader extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: 8.w),
-                Icon(Icons.watch, size: 24.s, color: primary.withOpacity(0.5)),
+                Icon(
+                  Icons.hotel_class_outlined,
+                  size: 24.s,
+                  color: primary.withOpacity(0.5),
+                ),
               ],
             ),
             SizedBox(height: 4.h),

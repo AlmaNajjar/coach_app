@@ -40,21 +40,20 @@ Future<void> setupGetIt() async {
   getIt.registerLazySingleton<LoginUseCase>(
     () => LoginUseCase(getIt<AuthRepository>()),
   );
-  getIt.registerFactory<AuthCubit>(
-    () => AuthCubit(getIt<LoginUseCase>()),
-  );
+  getIt.registerFactory<AuthCubit>(() => AuthCubit(getIt<LoginUseCase>()));
   getIt.registerLazySingleton<CoachProfileRemoteDataSource>(
     () => CoachProfileRemoteDataSourceImpl(getIt<Dio>()),
   );
   getIt.registerLazySingleton<CoachProfileRepository>(
-    () => CoachProfileRepositoryImpl(
-      getIt<CoachProfileRemoteDataSource>(),
-    ),
+    () => CoachProfileRepositoryImpl(getIt<CoachProfileRemoteDataSource>()),
   );
   getIt.registerLazySingleton<GetCoachProfileUseCase>(
     () => GetCoachProfileUseCase(getIt<CoachProfileRepository>()),
   );
   getIt.registerFactory<CoachProfileCubit>(
-    () => CoachProfileCubit(getIt<GetCoachProfileUseCase>()),
+    () => CoachProfileCubit(
+      getIt<GetCoachProfileUseCase>(),
+      getIt<CoachProfileRemoteDataSource>(),
+    ),
   );
 }

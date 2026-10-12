@@ -19,54 +19,14 @@ class CoachStatsSection extends StatelessWidget {
                 icon: Icons.group_outlined,
                 title: 'Total Subscribers',
                 value: '${state.profile?.totalSubscribers ?? 0}',
-                subtitleWidgets: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.arrow_upward_rounded,
-                          size: 11.s,
-                          color: Color(0xFF10B981),
-                        ),
-                        Text(
-                          '+12',
-                          style: TextStyle(
-                            fontSize: 10.s,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF10B981),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Text(
-                      'vs. last month',
-                      style: TextStyle(fontSize: 8.s, color: grey),
-                    ),
-                  ],
-                ),
               ),
             ),
             SizedBox(width: 12.w),
             Expanded(
               child: _StatCard(
-                icon: Icons.hourglass_top_rounded,
-                title: 'Active subscribers',
-                value: '${state.profile?.activeSubscribers ?? 0}',
-                subtitleWidgets: Row(
-                  children: [
-                    Icon(Icons.access_time_rounded, size: 11.s, color: grey),
-                    SizedBox(width: 3.w),
-                    Text(
-                      '7 days',
-                      style: TextStyle(
-                        fontSize: 9.s,
-                        color: grey,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
+                icon: Icons.timer_outlined,
+                title: 'Expiring Soon',
+                value: '${state.expiringSoonCount}',
               ),
             ),
           ],
@@ -80,14 +40,12 @@ class _StatCard extends StatelessWidget {
   final IconData icon;
   final String title;
   final String value;
-  final Widget subtitleWidgets;
 
   const _StatCard({
     super.key,
     required this.icon,
     required this.title,
     required this.value,
-    required this.subtitleWidgets,
   });
 
   @override
@@ -138,7 +96,7 @@ class _StatCard extends StatelessWidget {
                     Text(
                       title,
                       style: TextStyle(
-                        fontSize: 10.s,
+                        fontSize: 12.s,
                         fontWeight: FontWeight.w500,
                         color: grey,
                       ),
@@ -159,8 +117,6 @@ class _StatCard extends StatelessWidget {
                             height: 1.1,
                           ),
                         ),
-                        SizedBox(width: 6.w),
-                        Expanded(child: subtitleWidgets),
                       ],
                     ),
                   ],

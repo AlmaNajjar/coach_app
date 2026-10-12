@@ -71,200 +71,104 @@ class CoachProfileCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          Container(
+            width: 55.w,
+            height: 55.w,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: backgroundColor, width: 1.w),
+              image: (profile.photoUrl != null && profile.photoUrl!.isNotEmpty)
+                  ? DecorationImage(
+                      image: NetworkImage(profile.photoUrl!),
+                      fit: BoxFit.cover,
+                    )
+                  : null,
+            ),
+            child: (profile.photoUrl == null || profile.photoUrl!.isEmpty)
+                ? ClipOval(
+                    child: Image.asset(
+                      'assets/image/splash.jpg',
+                      fit: BoxFit.cover,
+                    ),
+                  )
+                : null,
+          ),
+
+          SizedBox(width: 10.w),
           Expanded(
-            flex: 6,
-            child: Row(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // صورة المدرب من الـ API أو صورة بديلة
-                Container(
-                  width: 55.w,
-                  height: 55.w,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: backgroundColor, width: 1.w),
-                    image:
-                        (profile.photoUrl != null &&
-                            profile.photoUrl!.isNotEmpty)
-                        ? DecorationImage(
-                            image: NetworkImage(profile.photoUrl!),
-                            fit: BoxFit.cover,
-                          )
-                        : null,
-                  ),
-                  child: (profile.photoUrl == null || profile.photoUrl!.isEmpty)
-                      ? Icon(Icons.person, color: grey, size: 28.s)
-                      : null,
+                // الاسم الكامل + شارة التوثيق
+                Row(
+                  children: [
+                    Flexible(
+                      child: Text(
+                        profile.fullName,
+                        style: TextStyle(
+                          fontSize: 22.s,
+                          fontWeight: FontWeight.bold,
+                          color: textColor,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    SizedBox(width: 5.w),
+                    Icon(Icons.verified, size: 16.s, color: primary),
+                  ],
                 ),
-
-                SizedBox(width: 10.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // الاسم الكامل + شارة التوثيق
-                      Row(
-                        children: [
-                          Flexible(
-                            child: Text(
-                              profile.fullName,
-                              style: TextStyle(
-                                fontSize: 15.s,
-                                fontWeight: FontWeight.bold,
-                                color: textColor,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          SizedBox(width: 4.w),
-                          Icon(Icons.verified, size: 16.s, color: primary),
-                        ],
-                      ),
-                      SizedBox(height: 2.h),
-
-                      // المسمى الوظيفي
-                      Padding(
-                        padding: EdgeInsets.only(left: 20),
-                        child: Text(
-                          profile.workStatus ?? 'Fitness Coach',
-                          style: TextStyle(
-                            fontSize: 14.s,
-                            color: const Color.fromARGB(255, 78, 189, 82),
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 4.h),
-
-                      // 1. سنوات الخبرة + الجنس
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.workspace_premium_outlined,
-                            size: 14.s,
-                            color: const Color(0xFFF59E0B), // لون برتقالي ذهبي
-                          ),
-                          SizedBox(width: 4.w),
-                          Text(
-                            '${profile.experienceYears ?? 0} سنوات خبرة',
-                            style: TextStyle(
-                              fontSize: 11.s,
-                              fontWeight: FontWeight.bold,
-                              color: textColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 4.h),
-
-                      // 2. رقم الهاتف
-                      if (profile.phone != null &&
-                          profile.phone!.isNotEmpty) ...[
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.phone_outlined,
-                              size: 12.s,
-                              color: primary,
-                            ),
-                            SizedBox(width: 4.w),
-                            Text(
-                              profile.phone!,
-                              style: TextStyle(
-                                fontSize: 13.s,
-                                color: grey,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-
-                      SizedBox(height: 8.h),
-
-                      // الشارات (نعرض أسماء الفروع الخاصة بالمدرب كـ Tags)
-                      Wrap(
-                        spacing: 4.w,
-                        runSpacing: 4.h,
-                        children: profile.branches.isNotEmpty
-                            ? profile.branches
-                                  .map((branch) => _buildTag(branch.name))
-                                  .toList()
-                            : [
-                                _buildTag('Strength'),
-                                _buildTag('Endurance'),
-                                _buildTag('Fitness'),
-                              ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          // 2. خط فاصل عمودي
-          Container(
-            height: 90.h,
-            width: 1.w,
-            color: grey.withOpacity(0.2),
-            margin: EdgeInsets.symmetric(horizontal: 8.w),
-          ),
-
-          // 3. الجزء الأيمن: دائرة نسبة العمولة
-          Expanded(
-            flex: 3,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 52.w,
-                  height: 52.w,
-                  child: Stack(
-                    fit: StackFit.expand,
-                    alignment: Alignment.center,
-                    children: [
-                      CircularProgressIndicator(
-                        value: 1.0,
-                        strokeWidth: 4.w,
-                        valueColor: AlwaysStoppedAnimation<Color>(grey),
-                      ),
-                      // قوس النسبة الفعلي بلون التطبيق الأساسي
-                      CircularProgressIndicator(
-                        value: ((profile.privateCommissionRate ?? 0) / 100)
-                            .clamp(0.0, 1.0),
-                        strokeWidth: 4.w,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          primary.withOpacity(0.6),
-                        ),
-                        strokeCap: StrokeCap.round,
-                      ),
-                      Center(
-                        child: Text(
-                          '${profile.privateCommissionRate?.toInt() ?? 0}%',
-                          style: TextStyle(
-                            fontSize: 12.s,
-                            fontWeight: FontWeight.bold,
-                            color: textColor,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 6.h),
+                SizedBox(height: 5.h),
+                // المسمى الوظيفي
                 Text(
-                  'عمولة التدريب',
-                  textAlign: TextAlign.center,
+                  profile.workStatus ?? 'Fitness Coach',
                   style: TextStyle(
                     fontSize: 14.s,
-                    color: grey,
-                    fontWeight: FontWeight.bold,
+                    color: const Color.fromARGB(255, 78, 189, 82),
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
               ],
             ),
           ),
+          Container(
+            height: 45.h,
+            width: 1.w,
+            color: grey.withOpacity(0.3),
+            margin: EdgeInsets.symmetric(horizontal: 20.w),
+          ),
+
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(height: 20.h),
+              if (profile.username != null) ...[
+                Text(
+                  '${profile.username}',
+                  style: TextStyle(
+                    fontSize: 11.s,
+                    fontWeight: FontWeight.bold,
+                    color: black,
+                  ),
+                ),
+
+                SizedBox(height: 4.h),
+
+                // الشارات (نعرض أسماء الفروع الخاصة بالمدرب كـ Tags)
+                Wrap(
+                  spacing: 4.w,
+                  runSpacing: 4.h,
+                  children: profile.branches.isNotEmpty
+                      ? profile.branches
+                            .map((branch) => _buildTag(branch.name))
+                            .toList()
+                      : [_buildTag('Endurance')],
+                ),
+                SizedBox(height: 10.h),
+              ],
+            ],
+          ),
+          SizedBox(width: 15.w),
         ],
       ),
     );
@@ -286,13 +190,9 @@ class CoachProfileCard extends StatelessWidget {
 
   Widget _buildTag(String title) {
     return Row(
-      mainAxisSize: MainAxisSize.min, // ليأخذ حجم الأيقونة والنص فقط
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(
-          Icons.location_on_outlined, // أيقونة الفرع / الموقع
-          size: 14.s,
-          color: primary,
-        ),
+        Icon(Icons.location_on_outlined, size: 14.s, color: grey),
         SizedBox(width: 4.w),
         Text(
           title,
