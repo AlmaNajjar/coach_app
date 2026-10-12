@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
+import 'package:coach_app/features/home/data/datasources/coach_subscribers_remote_data_source.dart';
+import 'package:coach_app/features/home/data/repositories/coach_subscribers_repository_impl.dart';
+import 'package:coach_app/features/home/domain/repositories/coach_subscribers_repository.dart';
+import 'package:coach_app/features/home/domain/use_cases/get_coach_subscribers_use_case.dart';
+import 'package:coach_app/features/home/presentation/cubit/coach_subscribers_cubit.dart';
 import 'package:coach_app/features/auth/data/datasources/auth_local_data_source.dart';
 import 'package:coach_app/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:coach_app/features/auth/data/repos/auth_repo_impl.dart';
@@ -55,5 +60,18 @@ Future<void> setupGetIt() async {
       getIt<GetCoachProfileUseCase>(),
       getIt<CoachProfileRemoteDataSource>(),
     ),
+  );
+    // Coach subscribers
+  getIt.registerLazySingleton<CoachSubscribersRemoteDataSource>(
+    () => CoachSubscribersRemoteDataSourceImpl(getIt<Dio>()),
+  );
+  getIt.registerLazySingleton<CoachSubscribersRepository>(
+    () => CoachSubscribersRepositoryImpl(getIt<CoachSubscribersRemoteDataSource>()),
+  );
+  getIt.registerLazySingleton<GetCoachSubscribersUseCase>(
+    () => GetCoachSubscribersUseCase(getIt<CoachSubscribersRepository>()),
+  );
+  getIt.registerFactory<CoachSubscribersCubit>(
+    () => CoachSubscribersCubit(getIt<GetCoachSubscribersUseCase>()),
   );
 }
