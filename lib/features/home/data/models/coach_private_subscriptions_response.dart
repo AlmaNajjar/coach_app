@@ -21,13 +21,16 @@ class CoachPrivateSubscriptionsResponse {
         'Coach subscriptions response has no coach object.',
       );
     }
-
+    final summary = _asStringMap(data['summary']);
     return CoachPrivateSubscriptionsResponse(
-      coach: _coachFromJson(coach),
+      coach: _coachFromJson(coach, summary),
     );
   }
 
-  static CoachProfile _coachFromJson(Map<String, dynamic> json) {
+  static CoachProfile _coachFromJson(
+    Map<String, dynamic> json, [
+    Map<String, dynamic>? summary,
+  ]) {
     final firstName = _stringValue(json['first_name']);
     final lastName = _stringValue(json['last_name']);
     final fullName = _firstNonEmpty([
@@ -65,6 +68,8 @@ class CoachPrivateSubscriptionsResponse {
       privateCommissionRate: _numValue(json['private_commission_rate']),
       experienceYears: _intValue(json['experience_years']),
       branches: _branchList(json['branches']),
+      totalSubscribers: _intValue(summary?['total_subscribers']),
+      activeSubscribers: _intValue(summary?['total_active_subscribers']),
     );
   }
 
@@ -74,16 +79,19 @@ class CoachPrivateSubscriptionsResponse {
       throw const FormatException('Coach branches must be a list.');
     }
 
-    return value.map((branch) {
-      final json = _asStringMap(branch);
-      if (json == null) {
-        throw const FormatException('Coach branch must be an object.');
-      }
-      return CoachBranch(
-        id: _intValue(json['id']),
-        name: _stringValue(json['name']) ?? '',
-      );
-    }).where((branch) => branch.name.isNotEmpty).toList(growable: false);
+    return value
+        .map((branch) {
+          final json = _asStringMap(branch);
+          if (json == null) {
+            throw const FormatException('Coach branch must be an object.');
+          }
+          return CoachBranch(
+            id: _intValue(json['id']),
+            name: _stringValue(json['name']) ?? '',
+          );
+        })
+        .where((branch) => branch.name.isNotEmpty)
+        .toList(growable: false);
   }
 
   static Map<String, dynamic>? _asStringMap(dynamic value) {

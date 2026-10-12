@@ -1,70 +1,77 @@
 import 'package:coach_app/core/helper/constant.dart';
 import 'package:coach_app/core/helper/responsive.dart';
+import 'package:coach_app/features/home/presentation/cubit/coach_profile_cubit.dart';
+import 'package:coach_app/features/home/presentation/cubit/coach_profile_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CoachStatsSection extends StatelessWidget {
   const CoachStatsSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: _StatCard(
-            icon: Icons.group_outlined,
-            title: 'Total Subscribers',
-            value: '248',
-            subtitleWidgets: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+    return BlocBuilder<CoachProfileCubit, CoachProfileState>(
+      builder: (context, state) {
+        return Row(
+          children: [
+            Expanded(
+              child: _StatCard(
+                icon: Icons.group_outlined,
+                title: 'Total Subscribers',
+                value: '${state.profile?.totalSubscribers ?? 0}',
+                subtitleWidgets: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(
-                      Icons.arrow_upward_rounded,
-                      size: 11.s,
-                      color: Color(0xFF10B981),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.arrow_upward_rounded,
+                          size: 11.s,
+                          color: Color(0xFF10B981),
+                        ),
+                        Text(
+                          '+12',
+                          style: TextStyle(
+                            fontSize: 10.s,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF10B981),
+                          ),
+                        ),
+                      ],
                     ),
                     Text(
-                      '+12',
+                      'vs. last month',
+                      style: TextStyle(fontSize: 8.s, color: grey),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: _StatCard(
+                icon: Icons.hourglass_top_rounded,
+                title: 'Active subscribers',
+                value: '${state.profile?.activeSubscribers ?? 0}',
+                subtitleWidgets: Row(
+                  children: [
+                    Icon(Icons.access_time_rounded, size: 11.s, color: grey),
+                    SizedBox(width: 3.w),
+                    Text(
+                      '7 days',
                       style: TextStyle(
-                        fontSize: 10.s,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF10B981),
+                        fontSize: 9.s,
+                        color: grey,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ],
                 ),
-                Text(
-                  'vs. last month',
-                  style: TextStyle(fontSize: 8.s, color: grey),
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
-        SizedBox(width: 12.w),
-        Expanded(
-          child: _StatCard(
-            icon: Icons.hourglass_top_rounded,
-            title: 'Ending Soon',
-            value: '37',
-            subtitleWidgets: Row(
-              children: [
-                Icon(Icons.access_time_rounded, size: 11.s, color: grey),
-                SizedBox(width: 3.w),
-                Text(
-                  '< 7 days',
-                  style: TextStyle(
-                    fontSize: 9.s,
-                    color: grey,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
+          ],
+        );
+      },
     );
   }
 }
