@@ -59,24 +59,34 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   SafeArea(
                     bottom: false,
-                    child: SingleChildScrollView(
-                      padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 130.h),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CoachHomeHeader(),
-                          SizedBox(height: 16.h),
-                          CoachProfileCard(),
-                          SizedBox(height: 16.h),
-                          CoachStatsSection(),
-                          SizedBox(height: 16.h),
-                          WeekCalendarCard(
-                            initialDate: _selectedDate,
-                            onDateSelected: _onDateSelected,
+                    child: Builder(
+                      builder: (innerContext) => RefreshIndicator(
+                        onRefresh: () => innerContext
+                            .read<CoachSubscribersCubit>()
+                            .load(silent: true),
+                        child: SingleChildScrollView(
+                          physics: const AlwaysScrollableScrollPhysics(
+                            parent: BouncingScrollPhysics(),
                           ),
-                          SizedBox(height: 16.h),
-                          CoachSubscribersCard(),
-                        ],
+                          padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 130.h),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CoachHomeHeader(),
+                              SizedBox(height: 16.h),
+                              CoachProfileCard(),
+                              SizedBox(height: 16.h),
+                              CoachStatsSection(),
+                              SizedBox(height: 16.h),
+                              WeekCalendarCard(
+                                initialDate: _selectedDate,
+                                onDateSelected: _onDateSelected,
+                              ),
+                              SizedBox(height: 16.h),
+                              const CoachSubscribersCard(),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),
