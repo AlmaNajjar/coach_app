@@ -1,3 +1,8 @@
+import 'package:coach_app/features/clients/data/datasource/clients_remote_data_source.dart';
+import 'package:coach_app/features/clients/domain/repo/clients_repo.dart';
+import 'package:coach_app/features/clients/domain/repo/clients_repo_impl.dart';
+import 'package:coach_app/features/clients/domain/use_case/get_clients_use_case.dart';
+import 'package:coach_app/features/clients/presentation/cubit/clients_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
@@ -61,6 +66,18 @@ Future<void> setupGetIt() async {
       getIt<CoachProfileRemoteDataSource>(),
     ),
   );
+  // Clients Feature
+  getIt.registerLazySingleton<ClientsRemoteDataSource>(
+    () => ClientsRemoteDataSourceImpl(getIt<Dio>()),
+  );
+  getIt.registerLazySingleton<ClientsRepository>(
+    () => ClientsRepositoryImpl(getIt<ClientsRemoteDataSource>()),
+  );
+  getIt.registerLazySingleton<GetClientsUseCase>(
+    () => GetClientsUseCase(getIt<ClientsRepository>()),
+  );
+  getIt.registerFactory<ClientsCubit>(
+    () => ClientsCubit(getIt<GetClientsUseCase>()),
     // Coach subscribers
   getIt.registerLazySingleton<CoachSubscribersRemoteDataSource>(
     () => CoachSubscribersRemoteDataSourceImpl(getIt<Dio>()),
