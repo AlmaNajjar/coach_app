@@ -1,4 +1,5 @@
 import 'package:coach_app/core/helper/responsive.dart';
+import 'package:coach_app/features/clients/presentation/screen/clients_screen.dart';
 import 'package:coach_app/features/home/presentation/widgets/coach_bottom_nav_bar.dart';
 import 'package:coach_app/features/home/presentation/widgets/coach_home_header.dart';
 import 'package:coach_app/features/home/presentation/widgets/coach_profile_card.dart';
@@ -22,8 +23,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _onNavTap(int index) {
     setState(() => _currentIndex = index);
-
-    // TODO: اربط التنقل بشاشاتك
   }
 
   void _onDateSelected(DateTime date) {
@@ -43,38 +42,40 @@ class _HomeScreenState extends State<HomeScreen> {
           currentIndex: _currentIndex,
           onTap: _onNavTap,
         ),
-        body: Stack(
-          fit: StackFit.expand,
-          children: [
-            Positioned.fill(
-              child: Image.asset(
-                "assets/image/splash_ground.jpg",
-                fit: BoxFit.cover,
-              ),
-            ),
-            SafeArea(
-              bottom: false,
-              child: SingleChildScrollView(
-                padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 130.h),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CoachHomeHeader(),
-                    SizedBox(height: 16.h),
-                    CoachProfileCard(),
-                    SizedBox(height: 16.h),
-                    CoachStatsSection(),
-                    SizedBox(height: 16.h),
-                    WeekCalendarCard(
-                      initialDate: _selectedDate,
-                      onDateSelected: _onDateSelected,
+        body: _currentIndex == 1
+            ? const ClientsScreen()
+            : Stack(
+                fit: StackFit.expand,
+                children: [
+                  Positioned.fill(
+                    child: Image.asset(
+                      "assets/image/splash_ground.jpg",
+                      fit: BoxFit.cover,
                     ),
-                  ],
-                ),
+                  ),
+                  SafeArea(
+                    bottom: false,
+                    child: SingleChildScrollView(
+                      padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 130.h),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CoachHomeHeader(),
+                          SizedBox(height: 16.h),
+                          CoachProfileCard(),
+                          SizedBox(height: 16.h),
+                          CoachStatsSection(),
+                          SizedBox(height: 16.h),
+                          WeekCalendarCard(
+                            initialDate: _selectedDate,
+                            onDateSelected: _onDateSelected,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
       ),
     );
   }
