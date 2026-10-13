@@ -78,12 +78,15 @@ Future<void> setupGetIt() async {
   );
   getIt.registerFactory<ClientsCubit>(
     () => ClientsCubit(getIt<GetClientsUseCase>()),
-    // Coach subscribers
+  );
+  // Coach subscribers
   getIt.registerLazySingleton<CoachSubscribersRemoteDataSource>(
     () => CoachSubscribersRemoteDataSourceImpl(getIt<Dio>()),
   );
   getIt.registerLazySingleton<CoachSubscribersRepository>(
-    () => CoachSubscribersRepositoryImpl(getIt<CoachSubscribersRemoteDataSource>()),
+    () => CoachSubscribersRepositoryImpl(
+      getIt<CoachSubscribersRemoteDataSource>(),
+    ),
   );
   getIt.registerLazySingleton<GetCoachSubscribersUseCase>(
     () => GetCoachSubscribersUseCase(getIt<CoachSubscribersRepository>()),

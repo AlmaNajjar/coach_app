@@ -1,6 +1,8 @@
 import 'package:coach_app/core/di/dependency_injection.dart';
 import 'package:coach_app/core/helper/responsive.dart';
 import 'package:coach_app/features/clients/presentation/screen/clients_screen.dart';
+import 'package:coach_app/features/home/presentation/cubit/coach_profile_cubit.dart';
+import 'package:coach_app/features/home/presentation/cubit/coach_subscribers_cubit.dart';
 import 'package:coach_app/features/home/presentation/widgets/coach_bottom_nav_bar.dart';
 import 'package:coach_app/features/home/presentation/widgets/coach_home_header.dart';
 import 'package:coach_app/features/home/presentation/widgets/coach_profile_card.dart';
@@ -72,6 +74,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             initialDate: _selectedDate,
                             onDateSelected: _onDateSelected,
                           ),
+                          SizedBox(height: 16.h),
+                          CoachSubscribersCard(),
                         ],
                       ),
                     ),
