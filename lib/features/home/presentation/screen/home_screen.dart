@@ -1,14 +1,14 @@
+import 'package:coach_app/core/di/dependency_injection.dart';
 import 'package:coach_app/core/helper/responsive.dart';
 import 'package:coach_app/features/clients/presentation/screen/clients_screen.dart';
 import 'package:coach_app/features/home/presentation/widgets/coach_bottom_nav_bar.dart';
 import 'package:coach_app/features/home/presentation/widgets/coach_home_header.dart';
 import 'package:coach_app/features/home/presentation/widgets/coach_profile_card.dart';
 import 'package:coach_app/features/home/presentation/widgets/coach_stats_section.dart';
+import 'package:coach_app/features/home/presentation/widgets/coach_subscribers_card.dart';
 import 'package:coach_app/features/home/presentation/widgets/week_calendar_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:coach_app/core/di/dependency_injection.dart';
-import 'package:coach_app/features/home/presentation/cubit/coach_profile_cubit.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -27,15 +27,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _onDateSelected(DateTime date) {
     setState(() => _selectedDate = date);
-    // TODO: لاحقاً بتجيب جلسات هاد اليوم من الـ Cubit، مثلاً:
-    // context.read<CoachSessionsCubit>().loadByDate(date);
   }
 
   @override
   Widget build(BuildContext context) {
     Responsive.init(context);
-    return BlocProvider(
-      create: (_) => getIt<CoachProfileCubit>()..load(),
+
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => getIt<CoachProfileCubit>()..load()),
+        BlocProvider(create: (_) => getIt<CoachSubscribersCubit>()..load()),
+      ],
       child: Scaffold(
         extendBody: true,
         bottomNavigationBar: CoachBottomNavBar(
