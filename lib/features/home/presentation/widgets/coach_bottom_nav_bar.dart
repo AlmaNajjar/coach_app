@@ -26,7 +26,11 @@ class CoachBottomNavBar extends StatelessWidget {
       Icons.calendar_month_outlined,
       Icons.calendar_month_rounded,
     ),
-    _NavItem('Details',Icons.assignment_ind_outlined, Icons.assignment_ind_rounded),
+    _NavItem(
+      'Details',
+      Icons.assignment_ind_outlined,
+      Icons.assignment_ind_rounded,
+    ),
     _NavItem('Account', Icons.person_outline_rounded, Icons.person_rounded),
   ];
 
@@ -118,7 +122,7 @@ class CoachBottomNavBar extends StatelessWidget {
                           item: _items[i],
                           selected: i == currentIndex,
                           iconAreaHeight: bubbleSize,
-                          topGap: 6.h,          // نفس قيمة top فوق
+                          topGap: 6.h, // نفس قيمة top فوق
                           labelBottom: 4.h,
                           onTap: () {
                             if (i == currentIndex) return;
@@ -213,7 +217,7 @@ class _NavButton extends StatelessWidget {
                   fontSize: selected ? 10.5.s : 10.s,
                   height: 1.1,
                   fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-                  color: selected 
+                  color: selected
                       ? CoachBottomNavBar._primary
                       : CoachBottomNavBar._inactive,
                   letterSpacing: selected ? 0.2 : 0,
@@ -234,11 +238,7 @@ class _Bubble extends StatelessWidget {
   final IconData icon;
   final double size;
 
-  const _Bubble({
-    required this.index,
-    required this.icon,
-    required this.size,
-  });
+  const _Bubble({required this.index, required this.icon, required this.size});
 
   @override
   Widget build(BuildContext context) {
@@ -282,10 +282,7 @@ class _Bubble extends StatelessWidget {
             gradient: const LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [
-                Color(0xFF58A8F2),
-                CoachBottomNavBar._primaryDark,
-              ],
+              colors: [Color(0xFF58A8F2), CoachBottomNavBar._primaryDark],
             ),
             border: Border.all(color: Colors.white, width: 3),
             boxShadow: [
