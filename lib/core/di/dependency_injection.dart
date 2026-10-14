@@ -79,10 +79,7 @@ Future<void> setupGetIt() async {
   getIt.registerFactory<ClientsCubit>(
     () => ClientsCubit(getIt<GetClientsUseCase>()),
   );
-<<<<<<< HEAD
-=======
 
->>>>>>> dbe02ae71da4fb0c75768989997cb32d356ac20a
   // Coach subscribers
   getIt.registerLazySingleton<CoachSubscribersRemoteDataSource>(
     () => CoachSubscribersRemoteDataSourceImpl(getIt<Dio>()),
