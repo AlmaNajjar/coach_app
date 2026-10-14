@@ -11,7 +11,7 @@ class TraineeHeaderCart extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: black, // الكحلي الداكن من ملف constant
+        color: primary, 
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
