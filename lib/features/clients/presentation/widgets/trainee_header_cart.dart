@@ -93,8 +93,7 @@ class TraineeHeaderCart extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 16.h),
-          SizedBox(height: 16.h),
+          SizedBox(height: 16.h),  
           Divider(color: white.withOpacity(0.15), height: 1),
           SizedBox(height: 12.h),
           Row(
