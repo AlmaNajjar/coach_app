@@ -26,6 +26,7 @@ class CoachBottomNavBar extends StatelessWidget {
       Icons.calendar_month_outlined,
       Icons.calendar_month_rounded,
     ),
+    _NavItem('Details',Icons.assignment_ind_outlined, Icons.assignment_ind_rounded),
     _NavItem('Account', Icons.person_outline_rounded, Icons.person_rounded),
   ];
 
@@ -209,10 +210,10 @@ class _NavButton extends StatelessWidget {
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.easeOut,
                 style: TextStyle(
-                  fontSize: selected ? 11.5 : 11,
+                  fontSize: selected ? 10.5.s : 10.s,
                   height: 1.1,
                   fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-                  color: selected
+                  color: selected 
                       ? CoachBottomNavBar._primary
                       : CoachBottomNavBar._inactive,
                   letterSpacing: selected ? 0.2 : 0,

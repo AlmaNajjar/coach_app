@@ -1,6 +1,7 @@
 import 'package:coach_app/core/di/dependency_injection.dart';
 import 'package:coach_app/core/helper/responsive.dart';
 import 'package:coach_app/features/clients/presentation/screen/clients_screen.dart';
+import 'package:coach_app/features/clients/presentation/widgets/trainee_details_app_bar.dart';
 import 'package:coach_app/features/home/presentation/cubit/coach_profile_cubit.dart';
 import 'package:coach_app/features/home/presentation/cubit/coach_subscribers_cubit.dart';
 import 'package:coach_app/features/home/presentation/widgets/coach_bottom_nav_bar.dart';
@@ -48,6 +49,8 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: _currentIndex == 1
             ? const ClientsScreen()
+            : _currentIndex == 3
+            ? const TraineeDetailsAppBar()
             : Stack(
                 fit: StackFit.expand,
                 children: [
