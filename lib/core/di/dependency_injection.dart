@@ -6,6 +6,13 @@ import 'package:coach_app/features/clients/presentation/cubit/clients_cubit.dart
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
+import 'package:coach_app/features/clients/domain/use_case/add_measurement_use_case.dart';
+import 'package:coach_app/features/clients/domain/use_case/get_measurement_by_id_use_case.dart';
+import 'package:coach_app/features/clients/domain/use_case/update_measurement_use_case.dart';
+import 'package:coach_app/features/clients/data/datasource/measurements_remote_data_source.dart';
+import 'package:coach_app/features/clients/domain/repo/measurements_repo_impl.dart';
+import 'package:coach_app/features/clients/domain/repo/measurements_repo.dart';
+import 'package:coach_app/features/clients/domain/use_case/get_member_measurements_use_case.dart';
 import 'package:coach_app/features/home/data/datasources/coach_subscribers_remote_data_source.dart';
 import 'package:coach_app/features/home/data/repositories/coach_subscribers_repository_impl.dart';
 import 'package:coach_app/features/home/domain/repositories/coach_subscribers_repository.dart';
@@ -94,5 +101,24 @@ Future<void> setupGetIt() async {
   );
   getIt.registerFactory<CoachSubscribersCubit>(
     () => CoachSubscribersCubit(getIt<GetCoachSubscribersUseCase>()),
+  );
+    // Measurements
+  getIt.registerLazySingleton<MeasurementsRemoteDataSource>(
+    () => MeasurementsRemoteDataSourceImpl(getIt<Dio>()),
+  );
+  getIt.registerLazySingleton<MeasurementsRepository>(
+    () => MeasurementsRepositoryImpl(getIt<MeasurementsRemoteDataSource>()),
+  );
+  getIt.registerLazySingleton<GetMemberMeasurementsUseCase>(
+    () => GetMemberMeasurementsUseCase(getIt<MeasurementsRepository>()),
+  );
+    getIt.registerLazySingleton<GetMeasurementByIdUseCase>(
+    () => GetMeasurementByIdUseCase(getIt<MeasurementsRepository>()),
+  );
+  getIt.registerLazySingleton<AddMeasurementUseCase>(
+    () => AddMeasurementUseCase(getIt<MeasurementsRepository>()),
+  );
+  getIt.registerLazySingleton<UpdateMeasurementUseCase>(
+    () => UpdateMeasurementUseCase(getIt<MeasurementsRepository>()),
   );
 }

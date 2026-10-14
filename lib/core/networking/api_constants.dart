@@ -36,7 +36,8 @@ class ApiConstants {
       "v1/notifications/$receptionId/read";
   static const String markAllNotificationsAsRead =
       "v1/notifications/mark-all-as-read";
-
+     static const String memberMeasurements = "v1/member/measurements";
+  static String memberMeasurementById(int id) => "v1/member/measurements/$id";
   // Attendance Endpoints
   static const String attendanceHistory = "v1/attendances/history";
 
