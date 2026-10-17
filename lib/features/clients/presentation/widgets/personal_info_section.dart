@@ -3,7 +3,28 @@ import 'package:coach_app/core/helper/responsive.dart';
 import 'package:flutter/material.dart';
 
 class PersonalInfoSection extends StatefulWidget {
-  const PersonalInfoSection({super.key});
+  final TextEditingController nameController;
+  final TextEditingController ageController;
+  final TextEditingController dobController;
+  final TextEditingController heightController;
+  final TextEditingController weightController;
+  final TextEditingController weightTargetController;
+  final TextEditingController startDateController;
+  final String selectedGender;
+  final ValueChanged<String?> onGenderChanged;
+
+  const PersonalInfoSection({
+    super.key,
+    required this.nameController,
+    required this.ageController,
+    required this.dobController,
+    required this.heightController,
+    required this.weightController,
+    required this.weightTargetController,
+    required this.startDateController,
+    required this.selectedGender,
+    required this.onGenderChanged,
+  });
 
   @override
   State<PersonalInfoSection> createState() => _PersonalInfoSectionState();
@@ -91,51 +112,70 @@ class _PersonalInfoSectionState extends State<PersonalInfoSection> {
                 Expanded(
                   child: _buildFormField(
                     label: 'Full Name',
-                    value: 'Ahmad Khaled',
+                    controller: widget.nameController, // ✅ نمرر الكونترولر
+                    hint: 'Enter full name',
                   ),
                 ),
                 SizedBox(width: 12.w),
                 Expanded(
-                  child: _buildFormField(label: 'Age', value: '25'),
+                  child: _buildFormField(
+                    label: 'Age',
+                    controller: widget.ageController, // ✅ نمرر الكونترولر
+                    hint: 'e.g. 25',
+                    keyboardType: TextInputType.number,
+                  ),
                 ),
               ],
             ),
-            SizedBox(height: 12.h),
 
-            // السطر الثاني: Date of Birth & Gender
+            SizedBox(height: 12.h),
             Row(
               children: [
                 Expanded(
                   child: _buildFormField(
                     label: 'Date of Birth',
-                    value: '12/01/2000',
+                    controller: widget.dobController,
+                    hint: 'YYYY-MM-DD',
+                    readOnly: true, // يمنع لوحة المفاتيح
                     suffixIcon: Icons.calendar_today_outlined,
+                    onTap: () => _selectDate(
+                      context,
+                      widget.dobController,
+                    ), // ✅ يفتح التقويم
                   ),
                 ),
                 SizedBox(width: 12.w),
                 Expanded(
-                  child: _buildFormField(
-                    label: 'Gender',
-                    value: 'Male',
-                    suffixIcon: Icons.keyboard_arrow_down_rounded,
-                  ),
+                  child: _buildGenderDropdown(), // ✅ قائمة اختيار الجنس
                 ),
               ],
             ),
+
             SizedBox(height: 12.h),
 
             // السطر الثالث: Height & Weight
             Row(
               children: [
                 Expanded(
-                  child: _buildFormField(label: 'Height', value: '178 cm'),
+                  child: _buildFormField(
+                    label: 'Height (cm)',
+                    controller: widget.heightController,
+                    hint: 'e.g. 178',
+                    keyboardType: TextInputType.number,
+                  ),
                 ),
                 SizedBox(width: 12.w),
                 Expanded(
-                  child: _buildFormField(label: 'Weight', value: '75 kg'),
+                  child: _buildFormField(
+                    label: 'Weight (kg)',
+                    controller: widget.weightController,
+                    hint: 'e.g. 75',
+                    keyboardType: TextInputType.number,
+                  ),
                 ),
               ],
             ),
+
             SizedBox(height: 12.h),
 
             // السطر الرابع: Weight Target & Date of Start
@@ -143,16 +183,24 @@ class _PersonalInfoSectionState extends State<PersonalInfoSection> {
               children: [
                 Expanded(
                   child: _buildFormField(
-                    label: 'Weight Target',
-                    value: '70 kg',
+                    label: 'Weight Target (kg)',
+                    controller: widget.weightTargetController,
+                    hint: 'e.g. 70',
+                    keyboardType: TextInputType.number,
                   ),
                 ),
                 SizedBox(width: 12.w),
                 Expanded(
                   child: _buildFormField(
                     label: 'Date of Start',
-                    value: '01/05/2024',
+                    controller: widget.startDateController,
+                    hint: 'YYYY-MM-DD',
+                    readOnly: true,
                     suffixIcon: Icons.calendar_today_outlined,
+                    onTap: () => _selectDate(
+                      context,
+                      widget.startDateController,
+                    ), // ✅ يفتح التقويم
                   ),
                 ),
               ],
@@ -166,8 +214,12 @@ class _PersonalInfoSectionState extends State<PersonalInfoSection> {
   // دالة مساعدة مخصصة لرسم الحقول المربعة بأناقة
   Widget _buildFormField({
     required String label,
-    required String value,
+    required TextEditingController controller,
+    required String hint,
+    TextInputType keyboardType = TextInputType.text,
+    bool readOnly = false,
     IconData? suffixIcon,
+    VoidCallback? onTap,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -181,26 +233,112 @@ class _PersonalInfoSectionState extends State<PersonalInfoSection> {
           ),
         ),
         SizedBox(height: 6.h),
+        TextFormField(
+          controller: controller,
+          readOnly:
+              readOnly, // للتواريخ نجعلها للقراءة فقط ونفتح التقويم عند الضغط
+          onTap: onTap,
+          keyboardType: keyboardType, // مثلاً أرقام للوزن والطول
+          style: TextStyle(
+            fontSize: 13.s,
+            fontWeight: FontWeight.w600,
+            color: textColor,
+          ),
+          decoration: InputDecoration(
+            hintText: hint,
+            hintStyle: TextStyle(fontSize: 12.s, color: grey.withOpacity(0.5)),
+            filled: true,
+            fillColor: backgroundColor,
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 12.w,
+              vertical: 10.h,
+            ),
+            suffixIcon: suffixIcon != null
+                ? Icon(suffixIcon, size: 16.s, color: grey)
+                : null,
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.r),
+              borderSide: BorderSide(color: grey.withOpacity(0.15)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.r),
+              borderSide: BorderSide(color: primary, width: 1.5),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _selectDate(
+    BuildContext context,
+    TextEditingController controller,
+  ) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1950),
+      lastDate: DateTime(2030),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(
+            context,
+          ).copyWith(colorScheme: ColorScheme.light(primary: primary)),
+          child: child!,
+        );
+      },
+    );
+    if (picked != null) {
+      final formatted =
+          "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
+      controller.text = formatted;
+    }
+  }
+
+  Widget _buildGenderDropdown() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Gender',
+          style: TextStyle(
+            fontSize: 12.s,
+            fontWeight: FontWeight.w500,
+            color: grey,
+          ),
+        ),
+        SizedBox(height: 6.h),
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+          padding: EdgeInsets.symmetric(horizontal: 12.w),
           decoration: BoxDecoration(
             color: backgroundColor,
             borderRadius: BorderRadius.circular(10.r),
             border: Border.all(color: grey.withOpacity(0.15)),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                value,
-                style: TextStyle(
-                  fontSize: 13.s,
-                  fontWeight: FontWeight.w600,
-                  color: textColor,
-                ),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              value: widget.selectedGender,
+              isExpanded: true,
+              icon: Icon(
+                Icons.keyboard_arrow_down_rounded,
+                size: 20.s,
+                color: grey,
               ),
-              if (suffixIcon != null) Icon(suffixIcon, size: 16.s, color: grey),
-            ],
+              items: ['Male', 'Female'].map((String val) {
+                return DropdownMenuItem<String>(
+                  value: val,
+                  child: Text(
+                    val,
+                    style: TextStyle(
+                      fontSize: 13.s,
+                      fontWeight: FontWeight.w600,
+                      color: textColor,
+                    ),
+                  ),
+                );
+              }).toList(),
+              onChanged: widget.onGenderChanged,
+            ),
           ),
         ),
       ],

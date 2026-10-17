@@ -18,11 +18,10 @@ class HealthAndBiometricsCards extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
       child: Row(
         children: [
-          // 1. كارت السجل الصحي (Health History)
           Expanded(
             child: _buildActionCard(
               icon: Icons.favorite_rounded,
-              iconColor: const Color(0xFFEF4444), // أحمر هادئ صحي
+              iconColor: const Color(0xFFEF4444),
               title: 'Health History',
               subtitle: 'Conditions & notes',
               onTap: onHealthTap ?? () {},

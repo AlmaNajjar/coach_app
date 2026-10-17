@@ -26,11 +26,6 @@ class CoachBottomNavBar extends StatelessWidget {
       Icons.calendar_month_outlined,
       Icons.calendar_month_rounded,
     ),
-    _NavItem(
-      'Details',
-      Icons.assignment_ind_outlined,
-      Icons.assignment_ind_rounded,
-    ),
     _NavItem('Account', Icons.person_outline_rounded, Icons.person_rounded),
   ];
 

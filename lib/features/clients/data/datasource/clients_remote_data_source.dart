@@ -26,24 +26,33 @@ class ClientsRemoteDataSourceImpl implements ClientsRemoteDataSource {
     if (search != null && search.trim().isNotEmpty) {
       queryParams['search'] = search.trim();
     }
-
     // 2. إرسال طلب GET للسيرفر
     final response = await _dio.get(
-      ApiConstants.playerSubscriptions,
+      ApiConstants.coachPrivateSubscriptions,
       queryParameters: queryParams,
     );
 
-    // 3. تحويل مصفوفة 'data' القادمة من السيرفر إلى قائمة من ClientModel
-    final dynamic data = response.data['data'];
-    if (data is List) {
-      return data
-          .map(
-            (item) =>
-                ClientModel.fromJson(Map<String, dynamic>.from(item as Map)),
-          )
-          .toList();
+    // 3. استخراج مصفوفة المتدربين بأمان سواء كانت مباشرة أو داخل all_subscriptions
+    final dynamic rawData = response.data['data'];
+    List<dynamic> itemsList = [];
+
+    if (rawData is List) {
+      itemsList = rawData;
+    } else if (rawData is Map) {
+      if (rawData['all_subscriptions'] is List) {
+        itemsList = rawData['all_subscriptions'] as List;
+      } else if (rawData['subscriptions'] is List) {
+        itemsList = rawData['subscriptions'] as List;
+      }
     }
 
-    return const [];
+    if (itemsList.isNotEmpty) {
+      print('ALL_KEYS: ${(itemsList.first as Map).keys.toList()}');
+    }
+
+    return itemsList
+        .whereType<Map>()
+        .map((item) => ClientModel.fromJson(Map<String, dynamic>.from(item)))
+        .toList();
   }
 }

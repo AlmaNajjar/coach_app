@@ -4,6 +4,8 @@ import 'package:coach_app/core/helper/constant.dart';
 import 'package:coach_app/core/helper/responsive.dart';
 import 'package:coach_app/features/clients/presentation/cubit/clients_cubit.dart';
 import 'package:coach_app/features/clients/presentation/cubit/clients_state.dart';
+import 'package:coach_app/features/clients/presentation/cubit/trainee_details_state.dart';
+import 'package:coach_app/features/clients/presentation/screen/trainee_details.dart';
 import 'package:coach_app/features/clients/presentation/widgets/buildfilterchips.dart';
 import 'package:coach_app/features/clients/presentation/widgets/buildheader.dart';
 import 'package:coach_app/features/clients/presentation/widgets/buildsearchandfilter.dart';
@@ -41,7 +43,6 @@ class _ClientsViewState extends State<_ClientsView> {
     super.dispose();
   }
 
-  // تحويل رقم الكبسولة إلى حالة يفهمها الـ API
   String? _mapFilterToStatus(int index) {
     switch (index) {
       case 1:
@@ -68,7 +69,6 @@ class _ClientsViewState extends State<_ClientsView> {
   void _onSearchChanged(String query) {
     _searchQuery = query;
     _debounceTimer?.cancel();
-    // ننتظر 400ms بعد توقف المستخدم عن الكتابة قبل إرسال الطلب
     _debounceTimer = Timer(const Duration(milliseconds: 400), () {
       if (mounted) {
         context.read<ClientsCubit>().loadClients(
@@ -85,7 +85,6 @@ class _ClientsViewState extends State<_ClientsView> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // الخلفية
           Positioned.fill(
             child: Image.asset(
               'assets/image/splash_ground.jpg',
@@ -121,7 +120,6 @@ class _ClientsViewState extends State<_ClientsView> {
     );
   }
 
-  // العنوان والوصف والخط الأزرق
   Widget _buildTitleSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -246,7 +244,14 @@ class _ClientsViewState extends State<_ClientsView> {
                 progress: client.progress,
                 photoUrl: client.photoUrl,
                 onTap: () {
-                  // هنا سنربط الانتقال لصفحة تفاصيل المتدرب بالـ client.id
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return TraineeDetailsScreen(client: client);
+                      },
+                    ),
+                  );
                 },
               );
             },

@@ -19,6 +19,11 @@ class ApiConstants {
   static const String packages = "v1/subscription-plans";
   static String coachShifts(int coachId) => "v1/coaches/$coachId/shifts";
 
+  // Member Shifts Endpoints
+  static const String memberShiftsSchedule = "v1/member-shifts/schedule";
+  static const String memberShifts = "v1/member-shifts";
+  static const String memberShiftsCalendar = "v1/member-shifts/calendar";
+
   // Offers Endpoints
   static const String offers = "v1/offers";
   static String offerDetails(int id) => "v1/offers/$id";
@@ -36,10 +41,12 @@ class ApiConstants {
       "v1/notifications/$receptionId/read";
   static const String markAllNotificationsAsRead =
       "v1/notifications/mark-all-as-read";
-     static const String memberMeasurements = "v1/member/measurements";
+  static const String memberMeasurements = "v1/member/measurements";
   static String memberMeasurementById(int id) => "v1/member/measurements/$id";
   // Attendance Endpoints
   static const String attendanceHistory = "v1/attendances/history";
+  //Health Profiles EndPoints
+  static const String memberHealthProfiles = "v1/member/health-profiles";
 
   // Session Schedule & Live Stream Endpoints
   static const String sessionTemplatesSchedule =

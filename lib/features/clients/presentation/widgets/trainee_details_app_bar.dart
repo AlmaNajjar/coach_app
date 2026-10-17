@@ -2,15 +2,19 @@ import 'package:coach_app/core/helper/constant.dart';
 import 'package:coach_app/core/helper/responsive.dart';
 import 'package:flutter/material.dart';
 
-
-class TraineeDetailsAppBar extends StatelessWidget implements PreferredSizeWidget {
+class TraineeDetailsAppBar extends StatelessWidget
+    implements PreferredSizeWidget {
+  final String title;
+  final String? subtitle;
+  final Widget? trailing;
   final VoidCallback? onBackTap;
-  final VoidCallback? onMoreTap;
 
   const TraineeDetailsAppBar({
     super.key,
+    required this.title,
+    this.subtitle,
+    this.trailing,
     this.onBackTap,
-    this.onMoreTap,
   });
 
   @override
@@ -21,29 +25,49 @@ class TraineeDetailsAppBar extends StatelessWidget implements PreferredSizeWidge
       centerTitle: false,
       leading: IconButton(
         icon: Icon(Icons.arrow_back, color: textColor),
-        onPressed: onBackTap ?? () {
-          if (Navigator.of(context).canPop()) {
-            Navigator.of(context).pop();
-          }
-        },
+        onPressed:
+            onBackTap ??
+            () {
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop();
+              }
+            },
       ),
-      title: Text(
-        'Trainee Details',
-        style: TextStyle(
-          fontSize: 20.s,
-          fontWeight: FontWeight.bold,
-          color: textColor,
-        ),
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 18.s,
+              fontWeight: FontWeight.bold,
+              color: textColor,
+            ),
+          ),
+          if (subtitle != null) ...[
+            SizedBox(height: 2.h),
+            Text(
+              subtitle!,
+              style: TextStyle(
+                fontSize: 12.s,
+                fontWeight: FontWeight.normal,
+                color: grey,
+              ),
+            ),
+          ],
+        ],
       ),
       actions: [
-        IconButton(
-          icon: Icon(Icons.more_vert, color: textColor),
-          onPressed: onMoreTap ?? () {},
-        ),
+        if (trailing != null)
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            child: Center(child: trailing),
+          ),
       ],
     );
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => Size.fromHeight(subtitle != null ? 65.h : kToolbarHeight);
 }

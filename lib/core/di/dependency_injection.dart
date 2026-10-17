@@ -1,8 +1,16 @@
 import 'package:coach_app/features/clients/data/datasource/clients_remote_data_source.dart';
+import 'package:coach_app/features/clients/data/datasource/health_profile_remote_data_source.dart';
+import 'package:coach_app/features/clients/data/datasource/member_shifts_remote_data_source.dart';
 import 'package:coach_app/features/clients/domain/repo/clients_repo.dart';
 import 'package:coach_app/features/clients/domain/repo/clients_repo_impl.dart';
+import 'package:coach_app/features/clients/domain/repo/health_profile_repo.dart';
+import 'package:coach_app/features/clients/domain/repo/health_profile_repo_impl.dart';
+import 'package:coach_app/features/clients/domain/repo/member_shifts_repo.dart';
+import 'package:coach_app/features/clients/domain/repo/member_shifts_repo_impl.dart';
 import 'package:coach_app/features/clients/domain/use_case/get_clients_use_case.dart';
 import 'package:coach_app/features/clients/presentation/cubit/clients_cubit.dart';
+import 'package:coach_app/features/clients/presentation/cubit/health_profile_cubit.dart';
+import 'package:coach_app/features/clients/presentation/cubit/trainee_details_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
@@ -102,7 +110,7 @@ Future<void> setupGetIt() async {
   getIt.registerFactory<CoachSubscribersCubit>(
     () => CoachSubscribersCubit(getIt<GetCoachSubscribersUseCase>()),
   );
-    // Measurements
+  // Measurements
   getIt.registerLazySingleton<MeasurementsRemoteDataSource>(
     () => MeasurementsRemoteDataSourceImpl(getIt<Dio>()),
   );
@@ -112,7 +120,7 @@ Future<void> setupGetIt() async {
   getIt.registerLazySingleton<GetMemberMeasurementsUseCase>(
     () => GetMemberMeasurementsUseCase(getIt<MeasurementsRepository>()),
   );
-    getIt.registerLazySingleton<GetMeasurementByIdUseCase>(
+  getIt.registerLazySingleton<GetMeasurementByIdUseCase>(
     () => GetMeasurementByIdUseCase(getIt<MeasurementsRepository>()),
   );
   getIt.registerLazySingleton<AddMeasurementUseCase>(
@@ -120,5 +128,29 @@ Future<void> setupGetIt() async {
   );
   getIt.registerLazySingleton<UpdateMeasurementUseCase>(
     () => UpdateMeasurementUseCase(getIt<MeasurementsRepository>()),
+  );
+  getIt.registerFactory<TraineeDetailsCubit>(
+    () => TraineeDetailsCubit(
+      getIt<GetMemberMeasurementsUseCase>(),
+      getIt<AddMeasurementUseCase>(),
+      getIt<MemberShiftsRepository>(),
+    ),
+  );
+  // Health Profile
+  getIt.registerLazySingleton<HealthProfileRemoteDataSource>(
+    () => HealthProfileRemoteDataSourceImpl(getIt<Dio>()),
+  );
+  getIt.registerLazySingleton<HealthProfileRepository>(
+    () => HealthProfileRepositoryImpl(getIt<HealthProfileRemoteDataSource>()),
+  );
+  getIt.registerFactory<HealthProfileCubit>(
+    () => HealthProfileCubit(getIt<HealthProfileRepository>()),
+  );
+  // Member Shifts (أوقات وورديات الدوام)
+  getIt.registerLazySingleton<MemberShiftsRemoteDataSource>(
+    () => MemberShiftsRemoteDataSourceImpl(getIt<Dio>()),
+  );
+  getIt.registerLazySingleton<MemberShiftsRepository>(
+    () => MemberShiftsRepositoryImpl(getIt<MemberShiftsRemoteDataSource>()),
   );
 }

@@ -4,6 +4,9 @@ class ClientModel {
   final String? phone;
   final String? photoUrl;
   final String planName;
+  final String? startDate;
+
+  final String? endDate;
   final String status;
   final int sessionsAllocated;
   final int sessionsConsumed;
@@ -12,6 +15,8 @@ class ClientModel {
     required this.id,
     required this.name,
     this.phone,
+    this.startDate,
+    this.endDate,
     this.photoUrl,
     required this.planName,
     required this.status,
@@ -29,43 +34,48 @@ class ClientModel {
     return (sessionsConsumed / sessionsAllocated).clamp(0.0, 1.0);
   }
 
-  // قراءة وتحويل الـ JSON القادم من /v1/player-subscriptions
+  // قراءة وتحويل الـ JSON القادم من /v1/coaches/private-subscriptions
   factory ClientModel.fromJson(Map<String, dynamic> json) {
-    // 1. استخراج بيانات المتدرب من كائن member -> person
-    final member = json['member'] as Map<String, dynamic>?;
-    final person = member?['person'] as Map<String, dynamic>?;
-
+    // 1. استخراج اسم المشترك
     final String clientName =
-        person?['full_name']?.toString() ??
-        member?['username']?.toString() ??
-        'متدرب';
+        json['member_name']?.toString() ??
+        json['full_name']?.toString() ??
+        (json['first_name'] != null
+            ? '${json['first_name']} ${json['last_name'] ?? ''}'.trim()
+            : 'متدرب');
 
-    final String? clientPhone = person?['phone']?.toString();
-    final String? clientPhoto =
-        person?['photo_url']?.toString() ?? member?['photo_url']?.toString();
+    // 2. استخراج رقم الهاتف ورابط الصورة
+    final String? clientPhone =
+        json['phone']?.toString() ?? json['phone_number']?.toString();
+    final String? clientPhoto = json['photo_url']?.toString();
 
-    // 2. استخراج الجلسات من قائمة items
-    int allocated = 0;
-    int consumed = 0;
-    final items = json['items'] as List<dynamic>?;
-    if (items != null && items.isNotEmpty) {
-      final firstItem = items.first as Map<String, dynamic>?;
-      allocated = (firstItem?['sessions_allocated'] as num?)?.toInt() ?? 0;
-      consumed = (firstItem?['sessions_consumed'] as num?)?.toInt() ?? 0;
-    }
+    // 3. استخراج الجلسات (المحددة والمستهلكة)
+    final int allocated = (json['sessions_allocated'] as num?)?.toInt() ?? 0;
+    final int consumed = (json['sessions_consumed'] as num?)?.toInt() ?? 0;
+    final String? clientEndDate = json['end_date']?.toString();
+    final String? clientStartDate = json['start_date']?.toString();
+
+    // 4. استخراج معرّف العضو / الاشتراك
+    final int memberId =
+        (json['member_id'] as num?)?.toInt() ??
+        (json['subscription_id'] as num?)?.toInt() ??
+        (json['id'] as num?)?.toInt() ??
+        0;
 
     return ClientModel(
-      id: (json['id'] as num?)?.toInt() ?? 0,
+      id: memberId,
       name: clientName,
       phone: clientPhone,
       photoUrl: clientPhoto,
-      planName: json['plan_name']?.toString() ?? 'تدريب عام',
+      planName: json['plan_name']?.toString() ?? 'تدريب خاص',
       status:
-          json['status_label']?.toString() ??
+          json['subscription_status']?.toString() ??
           json['status']?.toString() ??
-          'Active',
+          'active',
       sessionsAllocated: allocated,
       sessionsConsumed: consumed,
+      endDate: clientEndDate,
+      startDate: clientStartDate,
     );
   }
 }

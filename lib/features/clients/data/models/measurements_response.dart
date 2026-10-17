@@ -8,15 +8,37 @@ class MeasurementsResponse {
   /// الشكل المتوقع: { data: { current_page, last_page, total, data: [ ... ] } }
   factory MeasurementsResponse.fromJson(Map<String, dynamic> json) {
     final paginated = _asMap(json['data']);
+
+    // إذا المشترك جديد وما عنده قياسات، نرجع صفحة فارغة طبيعية
     if (paginated == null) {
-      throw const FormatException('Measurements response has no data object.');
+      // قد تكون data عبارة عن مصفوفة فارغة مباشرة []
+      final rawList = json['data'];
+      if (rawList is List) {
+        final items = rawList
+            .map(_asMap)
+            .whereType<Map<String, dynamic>>()
+            .map(measurementFromJson)
+            .toList(growable: false);
+        return MeasurementsResponse(
+          page: MeasurementsPage(
+            items: items,
+            currentPage: 1,
+            lastPage: 1,
+            total: items.length,
+          ),
+        );
+      }
+      return const MeasurementsResponse(
+        page: MeasurementsPage(
+          items: [],
+          currentPage: 1,
+          lastPage: 1,
+          total: 0,
+        ),
+      );
     }
 
     final rawItems = paginated['data'];
-    if (rawItems != null && rawItems is! List) {
-      throw const FormatException('Measurements data must be a list.');
-    }
-
     final items = (rawItems as List? ?? const [])
         .map(_asMap)
         .whereType<Map<String, dynamic>>()
@@ -57,8 +79,9 @@ class MeasurementsResponse {
       bmi: _double(json['bmi']),
       bodyWaterPercentage: _double(json['body_water_percentage']),
       restingMetabolicRate: _double(json['resting_metabolic_rate']),
-      totalDailyEnergyExpenditure:
-          _double(json['total_daily_energy_expenditure']),
+      totalDailyEnergyExpenditure: _double(
+        json['total_daily_energy_expenditure'],
+      ),
       physicalActivityLevel: _string(json['physical_activity_level']),
       buttocksCircumference: _double(json['buttocks_circumference']),
       aboveRightKnee: _double(json['above_right_knee']),

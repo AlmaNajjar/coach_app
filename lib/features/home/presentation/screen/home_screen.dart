@@ -49,8 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: _currentIndex == 1
             ? const ClientsScreen()
-            : _currentIndex == 3
-            ? const TraineeDetailsScreen()
+           
             : Stack(
                 fit: StackFit.expand,
                 children: [
